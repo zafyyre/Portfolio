@@ -27,7 +27,7 @@ function onButtonHover(hoveredObject) {
       const buttonData = buttonsData[buttonIndex];
       alert(`Button ${buttonData.label} clicked!`);
       if (buttonData.label === 'Games') {
-        window.location.href = 'src/games/gamesList.html';
+        window.location.href = '/src/games/gamesList.html';
       }
     }
   }
