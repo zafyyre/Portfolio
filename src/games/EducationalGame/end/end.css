@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css?family=Bubblegum+Sans');
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* 100% of the viewport height */
+    background-image: url('../images/FirstPage.gif');
+    background-position: center;
+    background-size: cover;
+    overflow: hidden;
+}
+
+#gameOverDiv {
+    text-align: center;
+    padding: 30px;
+    border-radius: 10px;
+    width: 50%;
+    font-family: 'Bubblegum Sans', sans-serif; /* Fallback font added */
+}
+
+#restart {
+    font-family: 'Bubblegum Sans', sans-serif; /* Fallback font added */
+}
+
+#newUser {
+    font-family: 'Bubblegum Sans', sans-serif; /* Fallback font added */
+}

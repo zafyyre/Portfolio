@@ -1,0 +1,7 @@
+[
+    { "label": "Experience", "color": "green" },
+    { "label": "Links", "color": "blue" },
+    { "label": "About", "color": "red" },
+    { "label": "Skills", "color": "purple" },
+    { "label": "Games", "color": "orange" }
+]

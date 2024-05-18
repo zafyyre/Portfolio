@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css?family=Bubblegum+Sans');
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* 100% of the viewport height */
+    background-image: url('../images/FirstPage.gif');
+    background-position: center;
+    background-size: cover;
+    overflow: hidden;
+}
+
+#readyToPlay {
+    text-align: center;
+    padding: 30px;
+    border-radius: 10px;
+    width: 50%;
+    font-family: 'Bubblegum Sans', sans-serif; /* Fallback font added */
+}
+
+#back {
+    position: absolute;  /* Positions the button relative to the nearest positioned ancestor */
+    top: 30px;           /* 10px from the top of the viewport */
+    left: 30px;          /* 10px from the left side of the viewport */
+    font-family: 'Bubblegum Sans', sans-serif; /* Fallback font added */
+}
+
+#yes {
+    font-family: 'Bubblegum Sans', sans-serif; /* Fallback font added */
+}
+
+#no {
+    font-family: 'Bubblegum Sans', sans-serif; /* Fallback font added */
+}
