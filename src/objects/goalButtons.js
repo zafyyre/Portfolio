@@ -49,7 +49,7 @@ function create(scene, loader) {
       const textGeometry = new TextGeometry(buttonData.label, {
         font: font,
         size: 0.3, // Adjust the size as needed
-        height: 0.01
+        depth: 0.01
       });
 
       // Center the text geometry
