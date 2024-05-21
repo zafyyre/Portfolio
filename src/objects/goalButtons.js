@@ -3,6 +3,7 @@ import * as THREE from "three";
 import * as TWEEN from "tween";
 import buttonsData from "../../src/data/buttons.json";
 import { TextGeometry } from "three/examples/jsm/Addons.js";
+import { sphereBody, isBallInPenaltyArea } from './football';
 
 const positions = [
   new THREE.Vector3(-2.375, 2.75, -35.69), // Top Left
@@ -72,6 +73,21 @@ function create(scene, loader) {
   });
 }
 
+// Function to show or hide goal buttons
+export function updateGoalButtonsVisibility() {
+  let anyVisible = false;
+  buttonMeshes.forEach(mesh => {
+    const checkBallInPenaltyArea = isBallInPenaltyArea(sphereBody);
+    if (checkBallInPenaltyArea) {
+      mesh.visible = true; // Show buttons
+      anyVisible = true;
+    } else {
+      mesh.visible = false; // Hide buttons
+    }
+  });
+  return anyVisible;
+}
+
 // Function to update Three.js button positions
 function animate() {
   positions.forEach((pos, index) => {
@@ -79,6 +95,8 @@ function animate() {
       buttonMeshes[index].position.copy(pos);
     }
   });
+  // Update the visibility of the goal buttons based on ball position
+  updateGoalButtonsVisibility();
 }
 
-export default { create, animate };
+export default { create, animate, updateGoalButtonsVisibility };

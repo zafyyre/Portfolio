@@ -5,6 +5,13 @@ import * as CANNON from 'cannon-es';
 export let sphereBody;
 export let football;
 
+const penaltyArea = {
+    minX: -7.5,
+    maxX: 6.5,
+    minZ: -35.6,
+    maxZ: -28.8,
+  };
+
 function create(scene, world, loader) {
     // Define material for the football
     const footballMaterial = new CANNON.Material();
@@ -32,6 +39,16 @@ function create(scene, world, loader) {
     });
 }
 
+// Function to check if the ball is in the penalty area
+export function isBallInPenaltyArea(ball) {
+    return (
+      ball.position.x >= penaltyArea.minX &&
+      ball.position.x <= penaltyArea.maxX &&
+      ball.position.z >= penaltyArea.minZ &&
+      ball.position.z <= penaltyArea.maxZ
+    );
+}
+
 const cameraOffset = new THREE.Vector3(0, 0.5, 1.2);
 
 function animate(camera) {
@@ -43,31 +60,4 @@ function animate(camera) {
     }
 }
 
-let startX, startY;
-
-// Track whether the mouse is down
-let isMouseDown = false;
-
-// Add event listener for onMouseDown
-document.addEventListener('mousedown', (e) => {
-    startX = e.clientX;
-    startY = e.clientY;
-    isMouseDown = true;
-});
-
-// Add event listener for onMouseUp
-document.addEventListener('mouseup', (e) => {
-    if (isMouseDown) {
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-
-        const VELOCITY_FACTOR = 0.015;
-        const magnitude = Math.sqrt(dx * dx + dy * dy);
-
-        // Apply velocity to the football
-        sphereBody.velocity.set(-dx * VELOCITY_FACTOR, magnitude * VELOCITY_FACTOR, -dy * VELOCITY_FACTOR);
-        isMouseDown = false; // Reset the mouse down flag
-    }
-});
-
-export default { create, animate };
+export default { create, animate, isBallInPenaltyArea };
