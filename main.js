@@ -16,7 +16,6 @@ import { onMouseMove, onMouseClick, onWindowResize } from './src/eventListeners'
 // import CannonDebugger from 'cannon-es-debugger';
 // import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
-
 // Initialize Scene, Camera, Renderer
 const gltfLoader = new GLTFLoader();
 const fontLoader = new FontLoader();
@@ -52,7 +51,7 @@ Stadium.create(scene, world, gltfLoader);
 GoalButtons.create(scene, fontLoader);
 
 // // STARS GENERATION
-// Stars.create(scene);
+Stars.create(scene);
 
 // LIGHTING
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // reduced intensity

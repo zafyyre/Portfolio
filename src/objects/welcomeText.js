@@ -7,7 +7,7 @@ function create(scene, loader) {
         const zaafGeometry = new TextGeometry(`Hello! Welcome to Zaaf's World`, {
             font: font,
             size: 2,
-            depth: 0.1,
+            depth: 0.01,
             curveSegments: 12,
             bevelEnabled: true,
             bevelThickness: 0,
@@ -22,7 +22,7 @@ function create(scene, loader) {
         const goalTextGeometry = new TextGeometry(`Dribble to the Penalty Area and take a shot!`, {
             font: font,
             size: 1,
-            depth: 0.1,
+            depth: 0.01,
             curveSegments: 12,
             bevelEnabled: true,
             bevelThickness: 0,

@@ -10,10 +10,6 @@ import { sphereBody } from "./objects/football";
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.body.style.display = 'block';
-});
-
 function onButtonClick(clickedObject, camera) {
   const buttonIndex = buttonMeshes.indexOf(clickedObject);
   if (buttonIndex !== -1) {
