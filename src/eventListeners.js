@@ -4,7 +4,7 @@ import * as TWEEN from "tween";
 import buttonsData from "./data/buttons.json";
 import { buttonMeshes } from "./objects/goalButtons";
 import { updateGoalButtonsVisibility } from "./objects/goalButtons";
-import { sphereBody } from "./objects/football";
+import { sphereBody, setCameraManualControl } from "./objects/football";
 
 // Raycaster setup
 const raycaster = new THREE.Raycaster();
@@ -18,7 +18,7 @@ function onButtonClick(clickedObject, camera) {
     console.log("Are goal buttons visible?", isVisible);
     if (buttonData.label === "Games" && isVisible) {
       const targetPosition = { x: 1.5, y: 0.75, z: -36 }; // Replace with the bottom right corner coordinates of your goal
-      animateCamera(targetPosition, camera);
+      shootBall(targetPosition, camera);
     }
   }
 }
@@ -59,18 +59,62 @@ let startX, startY;
 // Track whether the mouse is down
 let isMouseDown = false;
 
-// Add event listener for onMouseDown
+// Function that handles both mouse and touch events to extract the client coordinates.
+function getClientCoordinates(event) {
+  if (event.touches) {
+    return {
+      x: event.touches[0].clientX,
+      y: event.touches[0].clientY
+    };
+  } else {
+    return {
+      x: event.clientX,
+      y: event.clientY
+    };
+  }
+}
+
+
+// Add event listener for onMouseDown and onTouchStart
 document.addEventListener("mousedown", (e) => {
-  startX = e.clientX;
-  startY = e.clientY;
+  const { x, y } = getClientCoordinates(e);
+  startX = x;
+  startY = y;
   isMouseDown = true;
 });
 
-// Add event listener for onMouseUp
+document.addEventListener("touchstart", (e) => {
+  const { x, y } = getClientCoordinates(e);
+  startX = x;
+  startY = y;
+  isMouseDown = true;
+});
+
+// Add event listener for onMouseUp and onTouchEnd
 document.addEventListener("mouseup", (e) => {
   if (isMouseDown) {
-    const dx = e.clientX - startX;
-    const dy = e.clientY - startY;
+    const { x, y } = getClientCoordinates(e);
+    const dx = x - startX;
+    const dy = y - startY;
+
+    const VELOCITY_FACTOR = 0.015;
+    const magnitude = Math.sqrt(dx * dx + dy * dy);
+
+    // Apply velocity to the football
+    sphereBody.velocity.set(
+      -dx * VELOCITY_FACTOR,
+      magnitude * VELOCITY_FACTOR,
+      -dy * VELOCITY_FACTOR
+    );
+    isMouseDown = false; // Reset the mouse down flag
+  }
+});
+
+document.addEventListener("touchend", (e) => {
+  if (isMouseDown) {
+    const { x, y } = getClientCoordinates(e);
+    const dx = x - startX;
+    const dy = y - startY;
 
     const VELOCITY_FACTOR = 0.015;
     const magnitude = Math.sqrt(dx * dx + dy * dy);
@@ -86,12 +130,15 @@ document.addEventListener("mouseup", (e) => {
 });
 
 // Function to animate the camera
-function animateCamera(targetPosition, camera) {
+function shootBall(targetPosition, camera) {
   const initialPosition = {
     x: camera.position.x,
     y: camera.position.y,
     z: camera.position.z
   };
+
+  // Set manual camera control to true to prevent automatic updates
+  setCameraManualControl(true);
 
   new TWEEN.Tween(initialPosition)
     .to(targetPosition, 2000) // 2 seconds transition
@@ -101,6 +148,14 @@ function animateCamera(targetPosition, camera) {
         initialPosition.x,
         initialPosition.y,
         initialPosition.z
+      );
+    })
+    .onComplete(() => {
+      // Ensure the camera is exactly at the target position
+      camera.position.set(
+        targetPosition.x,
+        targetPosition.y,
+        targetPosition.z
       );
     })
     .start();
