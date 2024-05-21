@@ -1,6 +1,7 @@
 // main.js
 import './style.css';
 import * as THREE from 'three';
+import * as TWEEN from 'tween';
 import * as CANNON from 'cannon-es';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -78,7 +79,7 @@ function animate() {
 
   Football.animate(camera);
   GoalButtons.animate();
-
+  TWEEN.update();
   world.fixedStep();
   renderer.render( scene, camera );
 }
