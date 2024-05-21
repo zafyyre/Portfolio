@@ -4,7 +4,7 @@ import { TextGeometry } from 'three/examples/jsm/Addons.js';
 
 function create(scene, loader) {
     loader.load('./fonts/Roboto_Regular.json', function(font){
-        const zaafGeometry = new TextGeometry(`Test! Welcome to Zaaf's World`, {
+        const zaafGeometry = new TextGeometry(`Hello! Welcome to Zaaf's World`, {
             font: font,
             size: 2,
             height: 0.1,
