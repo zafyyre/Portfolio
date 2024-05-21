@@ -1,7 +1,7 @@
 [
-    { "label": "Experience", "color": "green", "text": "Experience" },
-    { "label": "Links", "color": "blue", "text": "links" },
-    { "label": "About", "color": "red", "text": "about" },
-    { "label": "Skills", "color": "purple", "text": "skills" },
-    { "label": "Games", "color": "orange", "text": "games" }
+    { "label": "Experience", "color": "#28a745", "text": "Experience" },
+    { "label": "Links", "color": "#007bff", "text": "links" },
+    { "label": "About", "color": "#dc3545", "text": "about" },
+    { "label": "Skills", "color": "#6f42c1", "text": "skills" },
+    { "label": "Games", "color": "#fd7e14", "text": "games" }
 ]
