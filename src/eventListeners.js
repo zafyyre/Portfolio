@@ -59,14 +59,26 @@ let startX, startY;
 // Track whether the mouse is down
 let isMouseDown = false;
 
-// Function that handles both mouse and touch events to extract the client coordinates.
+/**
+ * Extracts clientX and clientY from mouse and touch events.
+ * @param {Event} event - The event object (mouse or touch).
+ * @returns {Object} - An object containing x and y coordinates.
+ */
 function getClientCoordinates(event) {
-  if (event.touches) {
+  if (event.touches && event.touches.length > 0) {
+    // For touch events, get the coordinates from the first touch point
     return {
       x: event.touches[0].clientX,
       y: event.touches[0].clientY
     };
+  } else if (event.changedTouches && event.changedTouches.length > 0) {
+    // For touchend events, get the coordinates from the first changed touch point
+    return {
+      x: event.changedTouches[0].clientX,
+      y: event.changedTouches[0].clientY
+    };
   } else {
+    // For mouse events, get the coordinates from the event object
     return {
       x: event.clientX,
       y: event.clientY
@@ -74,26 +86,30 @@ function getClientCoordinates(event) {
   }
 }
 
-
-// Add event listener for onMouseDown and onTouchStart
-document.addEventListener("mousedown", (e) => {
-  const { x, y } = getClientCoordinates(e);
+/**
+ * Handles the start of a mouse or touch event.
+ * @param {Event} event - The event object (mouse or touch).
+ */
+function onStart(event) {
+  event.preventDefault(); // Prevent default behavior (e.g., scrolling)
+  const { x, y } = getClientCoordinates(event);
   startX = x;
   startY = y;
   isMouseDown = true;
-});
+}
 
-document.addEventListener("touchstart", (e) => {
-  const { x, y } = getClientCoordinates(e);
-  startX = x;
-  startY = y;
-  isMouseDown = true;
-});
 
-// Add event listener for onMouseUp and onTouchEnd
-document.addEventListener("mouseup", (e) => {
+document.addEventListener("mousedown", onStart);
+document.addEventListener("touchstart", onStart, { passive: false });
+
+/**
+ * Handles the end of a mouse or touch event.
+ * @param {Event} event - The event object (mouse or touch).
+ */
+function onEnd(event) {
+  event.preventDefault(); // Prevent default behavior
   if (isMouseDown) {
-    const { x, y } = getClientCoordinates(e);
+    const { x, y } = getClientCoordinates(event);
     const dx = x - startX;
     const dy = y - startY;
 
@@ -108,26 +124,14 @@ document.addEventListener("mouseup", (e) => {
     );
     isMouseDown = false; // Reset the mouse down flag
   }
-});
+}
 
-document.addEventListener("touchend", (e) => {
-  if (isMouseDown) {
-    const { x, y } = getClientCoordinates(e);
-    const dx = x - startX;
-    const dy = y - startY;
+document.addEventListener("mouseup", onEnd);
+document.addEventListener("touchend", onEnd, { passive: false });
 
-    const VELOCITY_FACTOR = 0.015;
-    const magnitude = Math.sqrt(dx * dx + dy * dy);
 
-    // Apply velocity to the football
-    sphereBody.velocity.set(
-      -dx * VELOCITY_FACTOR,
-      magnitude * VELOCITY_FACTOR,
-      -dy * VELOCITY_FACTOR
-    );
-    isMouseDown = false; // Reset the mouse down flag
-  }
-});
+document.addEventListener("mouseup", onEnd);
+document.addEventListener("touchend", onEnd);
 
 // Function to animate the camera
 function shootBall(targetPosition, camera) {
