@@ -15,10 +15,19 @@ function onButtonClick(clickedObject, camera) {
   if (buttonIndex !== -1) {
     const buttonData = buttonsData[buttonIndex];
     const isVisible = updateGoalButtonsVisibility();
-    console.log("Are goal buttons visible?", isVisible);
-    if (buttonData.label === "Games" && isVisible) {
-      const targetPosition = { x: 1.5, y: 0.75, z: -36 }; // Replace with the bottom right corner coordinates of your goal
-      shootBall(targetPosition, camera);
+    // console.log("Are goal buttons visible?", isVisible);
+    if (isVisible) {
+      if (buttonData.label === "Skills") {
+        exploreButton({ x: -1.95, y: 1, z: -36 }, camera);
+      } else if (buttonData.label === "Games") {
+        exploreButton({ x: 1.95, y: 1, z: -36 }, camera);
+      } else if (buttonData.label === "About") {
+        exploreButton({ x: 0, y: 2, z: -36 }, camera);
+      } else if (buttonData.label === "Links") {
+        exploreButton({ x: 2, y: 3.1, z: -36 }, camera);
+      } else if (buttonData.label === "Experience") {
+        exploreButton({ x: -2.1, y: 3.1, z: -36 }, camera);
+      }
     }
   }
 }
@@ -61,19 +70,19 @@ function getClientCoordinates(event) {
     // For touch events, get the coordinates from the first touch point
     return {
       x: event.touches[0].clientX,
-      y: event.touches[0].clientY
+      y: event.touches[0].clientY,
     };
   } else if (event.changedTouches && event.changedTouches.length > 0) {
     // For touchend events, get the coordinates from the first changed touch point
     return {
       x: event.changedTouches[0].clientX,
-      y: event.changedTouches[0].clientY
+      y: event.changedTouches[0].clientY,
     };
   } else {
     // For mouse events, get the coordinates from the event object
     return {
       x: event.clientX,
-      y: event.clientY
+      y: event.clientY,
     };
   }
 }
@@ -114,12 +123,12 @@ function onEnd(event) {
   }
 }
 
-// Function to animate the camera
-function shootBall(targetPosition, camera) {
+// Function to animate the camera into one of the goal bttons
+function exploreButton(targetPosition, camera) {
   const initialPosition = {
     x: camera.position.x,
     y: camera.position.y,
-    z: camera.position.z
+    z: camera.position.z,
   };
 
   // Set manual camera control to true to prevent automatic updates
@@ -137,11 +146,7 @@ function shootBall(targetPosition, camera) {
     })
     .onComplete(() => {
       // Ensure the camera is exactly at the target position
-      camera.position.set(
-        targetPosition.x,
-        targetPosition.y,
-        targetPosition.z
-      );
+      camera.position.set(targetPosition.x, targetPosition.y, targetPosition.z);
     })
     .start();
 }
