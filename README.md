@@ -46,7 +46,7 @@ Contributions are welcome! If you have suggestions or improvements, please open 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Contact
-You can reach me via email at [zaaf17@hotmail.com](mailto:zaaf17@hotmail.com) or connect with me on [LinkedIn](https://www.linkedin.com/your-profile).
+You can reach me via email at [zaaf17@hotmail.com](mailto:zaaf17@hotmail.com) or connect with me on [LinkedIn](https://www.linkedin.com/in/zaafirali11).
 
 
 Thank you for visiting my portfolio!
