@@ -60,6 +60,7 @@ function animate(camera) {
     football.position.copy(sphereBody.position);
     football.quaternion.copy(sphereBody.quaternion);
 
+    // console.log(sphereBody.position)
     // Modified animate function to only update the camera position if isCameraManual is false.
     if (!isCameraManual) {
       camera.position.copy(sphereBody.position).add(cameraOffset);
@@ -67,4 +68,4 @@ function animate(camera) {
   }
 }
 
-export default { create, animate, isBallInPenaltyArea, setCameraManualControl  };
+export default { create, animate, isBallInPenaltyArea, setCameraManualControl };
