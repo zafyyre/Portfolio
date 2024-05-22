@@ -23,19 +23,11 @@ function onButtonClick(clickedObject, camera) {
   }
 }
 
-function onMouseMove(event, camera) {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-  raycaster.setFromCamera(mouse, camera);
-
-  const intersects = raycaster.intersectObjects(buttonMeshes, false);
-}
-
-function onMouseClick(event, camera) {
+function onClick(event, camera) {
   // Calculate mouse position in normalized device coordinates (-1 to +1)
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  const { x, y } = getClientCoordinates(event);
+  mouse.x = (x / window.innerWidth) * 2 - 1;
+  mouse.y = -(y / window.innerHeight) * 2 + 1;
 
   // Update the raycaster
   raycaster.setFromCamera(mouse, camera);
@@ -98,10 +90,6 @@ function onStart(event) {
   isMouseDown = true;
 }
 
-
-document.addEventListener("mousedown", onStart);
-document.addEventListener("touchstart", onStart, { passive: false });
-
 /**
  * Handles the end of a mouse or touch event.
  * @param {Event} event - The event object (mouse or touch).
@@ -125,13 +113,6 @@ function onEnd(event) {
     isMouseDown = false; // Reset the mouse down flag
   }
 }
-
-document.addEventListener("mouseup", onEnd);
-document.addEventListener("touchend", onEnd, { passive: false });
-
-
-document.addEventListener("mouseup", onEnd);
-document.addEventListener("touchend", onEnd);
 
 // Function to animate the camera
 function shootBall(targetPosition, camera) {
@@ -165,4 +146,4 @@ function shootBall(targetPosition, camera) {
     .start();
 }
 
-export { onMouseMove, onMouseClick, onWindowResize };
+export { onClick, onWindowResize, onStart, onEnd };

@@ -10,7 +10,7 @@ import Football from './src/objects/football'
 import GoalButtons from './src/objects/goalButtons';
 import WelcomeText from './src/objects/welcomeText';
 import Stars from './src/objects/stars';
-import { onMouseMove, onMouseClick, onWindowResize } from './src/eventListeners';
+import { onClick, onWindowResize, onStart, onEnd } from './src/eventListeners';
 
 // DEBUGGING
 // import CannonDebugger from 'cannon-es-debugger';
@@ -62,9 +62,22 @@ scene.add(directionalLight);
 directionalLight.position.set(0, 10, 0);
 
 // EVENT LISTENERS
-window.addEventListener('mousemove', (event) => onMouseMove(event, camera), false);
-window.addEventListener('click', (event) => onMouseClick(event, camera), false);
+
+// Desktop
+window.addEventListener('click', (event) => onClick(event, camera), false);
 window.addEventListener('resize', () => onWindowResize(camera, renderer), false);
+window.addEventListener("mousedown", onStart);
+window.addEventListener("mouseup", onEnd);
+
+// Mobile
+// event listener to click goal buttons
+window.addEventListener("touchend", (event) => {
+  event.preventDefault(); // Prevent default behavior
+  onClick(event, camera);
+}, { passive: false });
+window.addEventListener("touchstart", onStart, { passive: false });
+window.addEventListener("touchend", onEnd, { passive: false });
+
 
 // DEBUGGING
 // const controls = new OrbitControls( camera, renderer.domElement ); // listens to dom events on the mouse and updates the camera accordingly
