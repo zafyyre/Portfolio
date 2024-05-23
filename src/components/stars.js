@@ -1,3 +1,4 @@
+// stars.js
 import * as THREE from 'three';
 
 function create(scene) {

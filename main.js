@@ -5,12 +5,12 @@ import * as TWEEN from 'tween';
 import * as CANNON from 'cannon-es';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import Stadium from './src/objects/stadium';
-import Football from './src/objects/football'
-import GoalButtons from './src/objects/goalButtons';
-import WelcomeText from './src/objects/welcomeText';
-import Stars from './src/objects/stars';
-import { onClick, onWindowResize, onStart, onEnd } from './src/eventListeners';
+import Stadium from './src/components/stadium';
+import Football from './src/components/football'
+import GoalButtons from './src/components/goalButtons';
+import WelcomeText from './src/components/welcomeText';
+import Stars from './src/components/stars';
+import { onClick, onWindowResize, onStart, onEnd } from './src/utils/eventListeners';
 
 // DEBUGGING
 // import CannonDebugger from 'cannon-es-debugger';

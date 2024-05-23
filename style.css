@@ -17,3 +17,39 @@ main {
 #games {
   display: none;
 }
+
+#goBack {
+  display: none; /* normally flex */
+  align-items: center;
+  background: #ffffff;
+  color: #333;
+  border: 2px solid #333;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 50px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: absolute;
+  top: 100px; /* Adjust as needed */
+  left: 100px; /* Adjust as needed */
+}
+
+#goBack:hover {
+  background: #333;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+#arrow {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+  transition: transform 0.3s ease;
+  display: inline-block;
+  vertical-align: middle;
+}

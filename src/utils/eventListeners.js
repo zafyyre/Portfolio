@@ -1,10 +1,10 @@
 // eventListeners.js
 import * as THREE from "three";
 import * as TWEEN from "tween";
-import buttonsData from "./data/buttons.json";
-import { buttonMeshes } from "./objects/goalButtons";
-import { updateGoalButtonsVisibility } from "./objects/goalButtons";
-import { sphereBody, setCameraManualControl } from "./objects/football";
+import buttonsData from "../data/buttons.json";
+import { buttonMeshes } from "/src/components/goalButtons";
+import { updateGoalButtonsVisibility } from "/src/components/goalButtons";
+import { sphereBody, setCameraManualControl } from "/src/components/football";
 
 // Raycaster setup
 const raycaster = new THREE.Raycaster();
@@ -17,16 +17,9 @@ function onButtonClick(clickedObject, camera) {
     const isVisible = updateGoalButtonsVisibility();
     // console.log("Are goal buttons visible?", isVisible);
     if (isVisible) {
-      if (buttonData.label === "Skills") {
-        exploreButton({ x: -1.95, y: 1, z: -36 }, camera);
-      } else if (buttonData.label === "Games") {
-        exploreButton({ x: 1.95, y: 1, z: -36 }, camera);
-      } else if (buttonData.label === "About") {
-        exploreButton({ x: 0, y: 2, z: -36 }, camera);
-      } else if (buttonData.label === "Links") {
-        exploreButton({ x: 2, y: 3.1, z: -36 }, camera);
-      } else if (buttonData.label === "Experience") {
-        exploreButton({ x: -2.1, y: 3.1, z: -36 }, camera);
+      const targetPosition = buttonData.clickPosition;
+      if (targetPosition) {
+        exploreButton(targetPosition, camera);
       }
     }
   }
@@ -41,7 +34,7 @@ function onClick(event, camera) {
   // Update the raycaster
   raycaster.setFromCamera(mouse, camera);
 
-  // Calculate objects intersecting the raycaster
+  // Calculate components intersecting the raycaster
   const intersects = raycaster.intersectObjects(buttonMeshes, false);
 
   if (intersects.length > 0) {
