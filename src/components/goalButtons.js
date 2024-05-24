@@ -13,7 +13,7 @@ function create(scene, loader) {
       const shape = new THREE.Shape();
 
       if (buttonData.label === "About") {
-        shape.absarc(0, 0, 1.2, 0, Math.PI * 2, false);
+        shape.absarc(0, 0, 1.05, 0, Math.PI * 2, false);
       } else {
         shape.moveTo(2.5, 1.25);
         shape.lineTo(-1.5, 1.25);
