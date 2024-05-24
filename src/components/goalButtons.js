@@ -1,6 +1,5 @@
 // goalButtons.js
 import * as THREE from "three";
-import * as TWEEN from "tween";
 import buttonsData from "../../src/data/buttons.json";
 import { TextGeometry } from "three/examples/jsm/Addons.js";
 import { sphereBody, isBallInPenaltyArea } from "./football";

@@ -2,8 +2,7 @@
 import * as THREE from "three";
 import * as TWEEN from "tween";
 import buttonsData from "../data/buttons.json";
-import { buttonMeshes } from "/src/components/goalButtons";
-import { updateGoalButtonsVisibility } from "/src/components/goalButtons";
+import { buttonMeshes, updateGoalButtonsVisibility } from "/src/components/goalButtons";
 import { sphereBody, setCameraManualControl } from "/src/components/football";
 
 // Raycaster setup
