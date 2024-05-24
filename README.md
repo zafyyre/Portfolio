@@ -1,6 +1,6 @@
 # Portfolio
 
-Welcome to my portfolio repository! This project showcases my skills and projects as a web developer.
+Welcome to my portfolio repository! This project showcases my skills and projects as a developer.
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -12,12 +12,16 @@ Welcome to my portfolio repository! This project showcases my skills and project
 - [Contact](#contact)
 
 ## Introduction
-This portfolio is a collection of my work and accomplishments in web development. It includes various projects demonstrating my expertise in HTML, CSS, JavaScript, and other technologies.
+This portfolio is a collection of my work and accomplishments throughout my devlopment experience. It was made with HTML, CSS, JavaScript with Vite, Three.js, Cannon.js and Tween.js.
 
 ## Features
+- About Zaaf
+- Work/Life Experience
 - Responsive design
 - Interactive UI components
-- Project showcases with descriptions and links
+- Project showcases with descriptions
+- Links to my socials
+- List of skills
 - Contact form for inquiries
 
 ## Installation
