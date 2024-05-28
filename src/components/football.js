@@ -24,7 +24,7 @@ function create(scene, world, loader) {
     mass: 5,
     shape: new CANNON.Sphere(0.13),
     material: footballMaterial,
-    position: new CANNON.Vec3(0, 100, 0), 
+    position: new CANNON.Vec3(-0.5, 100, 1.5), 
     angularVelocity: new CANNON.Vec3(10, 0, 0),
     linearDamping: 0.2,
     angularDamping: 0.5
