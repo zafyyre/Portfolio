@@ -10,7 +10,7 @@ import Football from './src/components/football'
 import GoalButtons from './src/components/goalButtons';
 import WelcomeText from './src/components/welcomeText';
 import Stars from './src/components/stars';
-import { onClick, onWindowResize, onStart, onEnd } from './src/utils/eventListeners';
+import EventListeners from './src/utils/eventListeners';
 
 // DEBUGGING
 // import CannonDebugger from 'cannon-es-debugger';
@@ -25,7 +25,7 @@ const renderer = new THREE.WebGLRenderer({ // renders the actual graphics to the
   canvas: document.querySelector( '#background' ) // needs to know which dom element to use
 }); 
 
-camera.position.set(0, 100, 0) // Set camera to this point so it doesn't show the loaded objects first
+camera.position.set(0, -100, 0) // Set camera to this point so it doesn't show the loaded objects first
 
 renderer.setPixelRatio( window.devicePixelRatio );
 renderer.setSize( window.innerWidth, window.innerHeight ); // makes it a full screen canvas
@@ -62,21 +62,18 @@ scene.add(directionalLight);
 directionalLight.position.set(0, 10, 0);
 
 // EVENT LISTENERS
+document.getElementById('goBack').addEventListener('click', EventListeners.onClickBack);
 
 // Desktop
-window.addEventListener('click', (event) => onClick(event, camera), false);
-window.addEventListener('resize', () => onWindowResize(camera, renderer), false);
-window.addEventListener("mousedown", onStart);
-window.addEventListener("mouseup", onEnd);
+window.addEventListener('click', (event) => EventListeners.onClick(event, camera), false);
+window.addEventListener('resize', () => EventListeners.onWindowResize(camera, renderer), false);
+window.addEventListener("mousedown", EventListeners.onStart);
+window.addEventListener("mouseup", EventListeners.onEnd);
 
 // Mobile
-// event listener to click goal buttons
-window.addEventListener("touchend", (event) => {
-  event.preventDefault(); // Prevent default behavior
-  onClick(event, camera);
-}, { passive: false });
-window.addEventListener("touchstart", onStart, { passive: false });
-window.addEventListener("touchend", onEnd, { passive: false });
+window.addEventListener("touchend", (event) => EventListeners.onClick(event, camera), { passive: false });
+window.addEventListener("touchstart", EventListeners.onStart, { passive: false });
+window.addEventListener("touchend", EventListeners.onEnd, { passive: false });
 
 
 // DEBUGGING

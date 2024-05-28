@@ -4,6 +4,11 @@ import * as TWEEN from "tween";
 import buttonsData from "../data/buttons.json";
 import { buttonMeshes, updateGoalButtonsVisibility } from "/src/components/goalButtons";
 import { sphereBody, setCameraManualControl } from "/src/components/football";
+import { loadButtonDetails } from "./goal-details"
+
+// Track whether the mouse is down
+let isMouseDown = false;
+let startX, startY;
 
 // Raycaster setup
 const raycaster = new THREE.Raycaster();
@@ -12,6 +17,7 @@ const mouse = new THREE.Vector2();
 function onButtonClick(clickedObject, camera) {
   const buttonIndex = buttonMeshes.indexOf(clickedObject);
   if (buttonIndex !== -1) {
+    // checks if the clickedObject is one of the buttonMeshes
     const buttonData = buttonsData[buttonIndex];
     const isVisible = updateGoalButtonsVisibility();
     // console.log("Are goal buttons visible?", isVisible);
@@ -19,13 +25,20 @@ function onButtonClick(clickedObject, camera) {
       const targetPosition = buttonData.clickPosition;
       if (targetPosition) {
         exploreButton(targetPosition, camera);
+        loadButtonDetails(buttonData.text);
       }
     }
   }
 }
 
+function onClickBack() {
+  const goalElement = document.getElementById("goal");
+  goalElement.style.display = "none";
+  setCameraManualControl(false);
+}
+
 function onClick(event, camera) {
-  // Calculate mouse position in normalized device coordinates (-1 to +1)
+  // Calculate mouse position in device coordinates (-1 to +1)
   const { x, y } = getClientCoordinates(event);
   mouse.x = (x / window.innerWidth) * 2 - 1;
   mouse.y = -(y / window.innerHeight) * 2 + 1;
@@ -33,7 +46,7 @@ function onClick(event, camera) {
   // Update the raycaster
   raycaster.setFromCamera(mouse, camera);
 
-  // Calculate components intersecting the raycaster
+  // Calculate objects intersecting the raycaster
   const intersects = raycaster.intersectObjects(buttonMeshes, false);
 
   if (intersects.length > 0) {
@@ -46,11 +59,6 @@ function onWindowResize(camera, renderer) {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
-
-let startX, startY;
-
-// Track whether the mouse is down
-let isMouseDown = false;
 
 /**
  * Extracts clientX and clientY from mouse and touch events.
@@ -143,4 +151,4 @@ function exploreButton(targetPosition, camera) {
     .start();
 }
 
-export { onClick, onWindowResize, onStart, onEnd };
+export default { onClick, onWindowResize, onStart, onEnd, onClickBack };

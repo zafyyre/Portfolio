@@ -2,7 +2,7 @@
     { 
         "label": "Experience", 
         "color": "#28a745", 
-        "text": "Experience", 
+        "text": "experience", 
         "clickPosition": { "x": -2.1, "y": 3.1, "z": -36 },
         "buttonPosition": { "x": -2.375, "y": 2.75, "z": -35.69 } 
     },
@@ -28,7 +28,7 @@
         "buttonPosition": { "x": -2.375, "y": 0.75, "z": -35.69 } 
     },
     { 
-        "label": "projects", 
+        "label": "Projects", 
         "color": "#fd7e14", 
         "text": "projects", 
         "clickPosition": { "x": 1.95, "y": 1, "z": -36 },

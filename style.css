@@ -1,29 +1,34 @@
 body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 0;
-  overflow: hidden;
+  min-height: 100vh;
+  color: #333;
+  line-height: 1.6;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 canvas {
   position: fixed;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Ensure the canvas stays in the background */
 }
 
-main {
-  position: absolute;
-  color: white
-}
-
-#games {
+#goal {
   display: none;
 }
 
 #goBack {
-  display: none; /* normally flex */
+  display: flex;
   align-items: center;
+  justify-content: center;
   background: #ffffff;
-  color: #333;
-  border: 2px solid #333;
+  color: #000000;
+  border: none;
   padding: 10px 20px;
   font-size: 16px;
   font-weight: bold;
@@ -33,23 +38,85 @@ main {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   cursor: pointer;
-  position: absolute;
-  top: 100px; /* Adjust as needed */
-  left: 100px; /* Adjust as needed */
+  position: fixed; /* Fixed position to stay in place */
+  top: 20px; /* Place it at the bottom */
+  left: 20px; /* Align it to the left */
+  z-index: 10; /* Ensure it stays above other content */
 }
 
 #goBack:hover {
   background: #333;
-  color: #ffffff;
+  color: white;
   transform: translateY(-2px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
 }
 
-#arrow {
-  width: 24px;
-  height: 24px;
-  fill: currentColor;
-  transition: transform 0.3s ease;
-  display: inline-block;
-  vertical-align: middle;
+
+
+div {
+  max-width: 1500px;
+  color: white;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+#experience {
+  background: #28a745;
+  background: rgba(40, 167, 69, 0.5); /* Green color with 50% opacity */
+}
+
+
+h1 {
+  margin-bottom: 20px;
+  color: white;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  margin-bottom: 30px;
+}
+
+details {
+  background: #ffffff;
+  color: #333;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease;
+}
+
+summary {
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+  outline: none;
+}
+
+p {
+  margin: 10px 0 0;
+  font-size: 1em;
+}
+
+#experience a {
+  color: #28a745;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#experience details summary:hover {
+  color: #28a745;
+}
+
+summary::marker {
+  font-weight: bold;
 }

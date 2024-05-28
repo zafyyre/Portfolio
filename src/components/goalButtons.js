@@ -80,4 +80,4 @@ function animate() {
   updateGoalButtonsVisibility();
 }
 
-export default { create, animate, updateGoalButtonsVisibility };
+export default { create, animate };
