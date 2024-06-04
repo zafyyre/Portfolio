@@ -4,6 +4,10 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+body.no-scroll {
+  overflow: hidden;
+}
+
 canvas {
   position: fixed;
   top: 0;

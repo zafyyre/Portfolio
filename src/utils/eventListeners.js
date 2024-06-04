@@ -92,6 +92,7 @@ function getClientCoordinates(event) {
  * @param {Event} event - The event object (mouse or touch).
  */
 function onStart(event) {
+  document.body.classList.add('no-scroll'); // Prevent scrolling
 
   const { x, y } = getClientCoordinates(event);
   startX = x;
@@ -104,6 +105,7 @@ function onStart(event) {
  * @param {Event} event - The event object (mouse or touch).
  */
 function onEnd(event) {
+  document.body.classList.remove('no-scroll'); // Re-enable scrolling
 
   if (isMouseDown) {
     const { x, y } = getClientCoordinates(event);
