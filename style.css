@@ -16,6 +16,12 @@ canvas {
   display: none;
 }
 
+/* Additional Styles for Debugging */
+a, details, summary {
+  position: relative;
+  z-index: 3;
+}
+
 #goBack {
   display: flex;
   align-items: center;
