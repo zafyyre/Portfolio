@@ -67,12 +67,12 @@ document.getElementById('goBack').addEventListener('click', EventListeners.onCli
 // Desktop
 window.addEventListener('click', (event) => EventListeners.onClick(event, camera), false);
 window.addEventListener('resize', () => EventListeners.onWindowResize(camera, renderer), false);
-window.addEventListener("mousedown", EventListeners.onStart);
-window.addEventListener("mouseup", EventListeners.onEnd);
+window.addEventListener("mousedown", EventListeners.onStart, false);
+window.addEventListener("mouseup", EventListeners.onEnd, false);
 
 // Mobile
-window.addEventListener("touchend", (event) => EventListeners.onClick(event, camera), { passive: false });
 window.addEventListener("touchstart", EventListeners.onStart, { passive: false });
+window.addEventListener("touchend", (event) => EventListeners.onClick(event, camera), { passive: false });
 window.addEventListener("touchend", EventListeners.onEnd, { passive: false });
 
 
