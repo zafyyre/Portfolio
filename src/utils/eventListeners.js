@@ -10,12 +10,15 @@ import { loadButtonDetails } from "./goal-details"
 let isMouseDown = false;
 let startX, startY;
 
+let buttonClicked = false;
+
 // Raycaster setup
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
 function onButtonClick(clickedObject, camera) {
   const buttonIndex = buttonMeshes.indexOf(clickedObject);
+  buttonClicked = true;
   if (buttonIndex !== -1) {
     // checks if the clickedObject is one of the buttonMeshes
     const buttonData = buttonsData[buttonIndex];
@@ -34,6 +37,7 @@ function onButtonClick(clickedObject, camera) {
 function onClickBack() {
   const goalElement = document.getElementById("goal");
   goalElement.style.display = "none";
+  buttonClicked = false;
   setCameraManualControl(false);
 }
 
@@ -92,7 +96,7 @@ function getClientCoordinates(event) {
  * @param {Event} event - The event object (mouse or touch).
  */
 function onStart(event) {
-  if (event.type === 'touchstart') {
+  if (event.type === 'touchstart' && !buttonClicked) {
     event.preventDefault(); // Prevent default behavior (e.g., scrolling) for touch events
   }
   const { x, y } = getClientCoordinates(event);
@@ -106,7 +110,7 @@ function onStart(event) {
  * @param {Event} event - The event object (mouse or touch).
  */
 function onEnd(event) {
-  if (event.type === 'touchend') {
+  if (event.type === 'touchend' && !buttonClicked) {
     event.preventDefault(); // Prevent default behavior for touch events
   }
   if (isMouseDown) {
