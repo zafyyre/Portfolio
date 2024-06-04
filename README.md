@@ -46,9 +46,6 @@ Feel free to explore the projects and interact with the various components. If y
 ## Contributing
 Contributions are welcome! If you have suggestions or improvements, please open an issue or submit a pull request.
 
-## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
 ## Contact
 You can reach me via email at [zaaf17@hotmail.com](mailto:zaaf17@hotmail.com) or connect with me on [LinkedIn](https://www.linkedin.com/in/zaafirali11).
 
