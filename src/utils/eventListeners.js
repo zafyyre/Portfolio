@@ -18,7 +18,6 @@ const mouse = new THREE.Vector2();
 
 function onButtonClick(clickedObject, camera) {
   const buttonIndex = buttonMeshes.indexOf(clickedObject);
-  buttonClicked = true;
   if (buttonIndex !== -1) {
     // checks if the clickedObject is one of the buttonMeshes
     const buttonData = buttonsData[buttonIndex];
@@ -29,6 +28,8 @@ function onButtonClick(clickedObject, camera) {
       if (targetPosition) {
         exploreButton(targetPosition, camera);
         loadButtonDetails(buttonData.text);
+        buttonClicked = true;
+        console.log(buttonClicked);
       }
     }
   }
@@ -38,6 +39,7 @@ function onClickBack() {
   const goalElement = document.getElementById("goal");
   goalElement.style.display = "none";
   buttonClicked = false;
+  console.log(buttonClicked);
   setCameraManualControl(false);
 }
 
@@ -129,6 +131,7 @@ function onEnd(event) {
     );
     isMouseDown = false; // Reset the mouse down flag
   }
+  buttonClicked = false; // Reset flag after touchend
 }
 
 // Function to animate the camera into one of the goal bttons
