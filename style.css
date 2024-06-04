@@ -103,9 +103,7 @@ p {
   margin: 10px 0 0;
   font-size: 1em;
   background: white;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 10px;
+
 }
 
 a:hover {
@@ -196,6 +194,12 @@ a img {
 
 #skills details summary:hover {
   color: #6f42c1;
+}
+
+#skills p {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
 }
 
 /* PROJECTS */
