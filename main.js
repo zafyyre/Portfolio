@@ -71,9 +71,15 @@ window.addEventListener("mousedown", EventListeners.onStart, false);
 window.addEventListener("mouseup", EventListeners.onEnd, false);
 
 // Mobile
-window.addEventListener("touchstart", EventListeners.onStart, { passive: false });
-window.addEventListener("touchend", (event) => EventListeners.onClick(event, camera), { passive: true });
-window.addEventListener("touchend", EventListeners.onEnd, { passive: true });
+window.addEventListener("touchstart", (event) => {
+  event.preventDefault();
+  EventListeners.onStart(event);
+}, { passive: false });
+window.addEventListener("touchend", (event) => {
+  event.preventDefault();
+  EventListeners.onClick(event, camera);
+  EventListeners.onEnd(event);
+}, { passive: false });
 
 
 // DEBUGGING
