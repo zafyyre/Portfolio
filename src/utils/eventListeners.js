@@ -92,7 +92,6 @@ function getClientCoordinates(event) {
  * @param {Event} event - The event object (mouse or touch).
  */
 function onStart(event) {
-  event.preventDefault(); // Prevent default behavior (e.g., scrolling)
   const { x, y } = getClientCoordinates(event);
   startX = x;
   startY = y;
@@ -104,7 +103,6 @@ function onStart(event) {
  * @param {Event} event - The event object (mouse or touch).
  */
 function onEnd(event) {
-  event.preventDefault(); // Prevent default behavior
   if (isMouseDown) {
     const { x, y } = getClientCoordinates(event);
     const dx = x - startX;
