@@ -38,8 +38,6 @@ function onButtonClick(clickedObject, camera) {
 function onClickBack() {
   const goalElement = document.getElementById("goal");
   goalElement.style.display = "none";
-  buttonClicked = false;
-  console.log(buttonClicked);
   setCameraManualControl(false);
 }
 
@@ -98,8 +96,8 @@ function getClientCoordinates(event) {
  * @param {Event} event - The event object (mouse or touch).
  */
 function onStart(event) {
-  if (event.type === 'touchstart' && buttonClicked) {
-    event.preventDefault(); // Prevent default behavior (e.g., scrolling) for touch events
+  if (event.target.tagName === 'CANVAS') { // Ensure the canvas captures touch events and prevents default behavior only when necessary.
+    event.preventDefault();
   }
   const { x, y } = getClientCoordinates(event);
   startX = x;
@@ -107,13 +105,14 @@ function onStart(event) {
   isMouseDown = true;
 }
 
+
 /**
  * Handles the end of a mouse or touch event.
  * @param {Event} event - The event object (mouse or touch).
  */
 function onEnd(event) {
-  if (event.type === 'touchend' && buttonClicked) {
-    event.preventDefault(); // Prevent default behavior for touch events
+  if (event.target.tagName === 'CANVAS') { // Ensure the canvas captures touch events and prevents default behavior only when necessary.
+    event.preventDefault();
   }
   if (isMouseDown) {
     const { x, y } = getClientCoordinates(event);
@@ -123,7 +122,6 @@ function onEnd(event) {
     const VELOCITY_FACTOR = 0.015;
     const magnitude = Math.sqrt(dx * dx + dy * dy);
 
-    // Apply velocity to the football
     sphereBody.velocity.set(
       -dx * VELOCITY_FACTOR,
       magnitude * VELOCITY_FACTOR,
