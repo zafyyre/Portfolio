@@ -29,7 +29,6 @@ function onButtonClick(clickedObject, camera) {
         exploreButton(targetPosition, camera);
         loadButtonDetails(buttonData.text);
         buttonClicked = true;
-        console.log(buttonClicked);
       }
     }
   }
