@@ -17,12 +17,6 @@ canvas {
   display: none;
 }
 
-/* Additional Styles for Debugging */
-a, details, summary {
-  position: relative;
-  z-index: 3;
-}
-
 #goBack {
   display: flex;
   align-items: center;
@@ -110,7 +104,9 @@ p {
   margin: 10px 0 0;
   font-size: 1em;
   background: white;
-
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
 }
 
 a:hover {
@@ -122,7 +118,6 @@ a img {
   height: 40px; /* Adjust the height to fit better */
   width: 40px; /* Adjust the width to fit better */
 }
-
 
 /* EXPERIENCE */
 
@@ -237,4 +232,41 @@ a img {
   margin-right: 0;
   height: 40px;
   width: 40px;
+}
+
+/* Media Queries for Mobile Devices */
+@media (max-width: 768px) {
+  div {
+    width: 90%;
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
+
+  p {
+    font-size: 1em;
+  }
+
+  #goBack {
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+
+  a img {
+    height: 30px;
+    width: 30px;
+  }
+
+  #footer-icons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #footer-icons a {
+    margin-bottom: 10px;
+  }
 }
