@@ -19,7 +19,7 @@ function create(scene, loader) {
         const zaafMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
         const zaafMesh = new THREE.Mesh(zaafGeometry, zaafMaterial);
 
-        const goalTextGeometry = new TextGeometry(`Dribble to the Penalty Area and take a shot!`, {
+        const goalTextGeometry = new TextGeometry(`Dribble to the Goal and click a button!`, {
             font: font,
             size: 1,
             depth: 0.01,
@@ -34,7 +34,7 @@ function create(scene, loader) {
         const goalTextMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
         const goalTextMesh = new THREE.Mesh(goalTextGeometry, goalTextMaterial);
 
-        goalTextMesh.position.set(-13.5, 7.5, -35)
+        goalTextMesh.position.set(-11.5, 7.5, -35)
         zaafMesh.position.set(-19.25, 20, -40);
         scene.add(zaafMesh, goalTextMesh);
     });  
