@@ -96,10 +96,12 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 88px;
   -webkit-text-size-adjust: 100%;
-  /* `clip`, not `hidden`: hidden makes the root a scroll container, which
-     breaks the sticky header. This stops iOS from letting the page pan
-     sideways if anything ever exceeds the viewport again. */
-  overflow-x: clip;
+  /* No overflow property here on purpose. `overflow-x: clip` was tried as a
+     backstop against sideways panning and shipped a blank page: constraining
+     overflow on the root changes the box IntersectionObserver measures
+     against, its callbacks stopped arriving, and every .reveal stayed at
+     opacity 0. Overflow is prevented at the source instead — see the note on
+     .awards about bare text inside a flex container. */
 }
 
 body {

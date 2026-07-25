@@ -98,24 +98,60 @@ if (header) {
    Scroll reveal
    --------------------------------------------------------------- */
 
-const revealables = document.querySelectorAll(".reveal");
+/*
+ * Content starts hidden and JS reveals it, which buys the entrance animation
+ * at the cost of one severe failure mode: if the reveal never runs, the page
+ * is blank. That has now happened in production once, so the reveal does not
+ * depend on any single mechanism.
+ *
+ * Primary: IntersectionObserver.
+ * Backups, in order of independence: a rAF pass, passive scroll/resize, a
+ * timer, and visibilitychange. Timers keep firing when rAF and observer
+ * callbacks do not, so at least one path always lands.
+ *
+ * Every path funnels through revealInView(), which only reveals what is
+ * actually on screen — so the backups guarantee visibility without flattening
+ * the scroll animation for content further down.
+ */
+
+const revealables = Array.from(document.querySelectorAll(".reveal"));
+const pending = new Set(revealables);
 const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
 ).matches;
 
+let revealObserver = null;
+
+function markRevealed(el) {
+  el.classList.add("is-visible");
+  pending.delete(el);
+  revealObserver?.unobserve(el);
+}
+
 function revealAll() {
-  revealables.forEach((el) => el.classList.add("is-visible"));
+  Array.from(pending).forEach(markRevealed);
+}
+
+function revealInView() {
+  if (!pending.size) return;
+  const viewportHeight =
+    window.innerHeight || document.documentElement.clientHeight || 0;
+  // A zero reading means the page has no usable layout yet; a later pass runs.
+  if (!viewportHeight) return;
+
+  Array.from(pending).forEach((el) => {
+    const box = el.getBoundingClientRect();
+    if (box.top < viewportHeight * 0.94 && box.bottom > 0) markRevealed(el);
+  });
 }
 
 if (prefersReducedMotion || !("IntersectionObserver" in window)) {
   revealAll();
 } else {
-  const observer = new IntersectionObserver(
+  revealObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
+        if (entry.isIntersecting) markRevealed(entry.target);
       });
     },
     { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
@@ -124,33 +160,43 @@ if (prefersReducedMotion || !("IntersectionObserver" in window)) {
   revealables.forEach((el, index) => {
     // Stagger siblings slightly so groups cascade instead of snapping in.
     el.style.setProperty("--reveal-delay", `${(index % 4) * 70}ms`);
-    observer.observe(el);
+    revealObserver.observe(el);
   });
 
-  // Anything already on screen is revealed from the first painted frame rather
-  // than waiting on an observer callback. Without this, a delayed or dropped
-  // delivery leaves the opening screen blank — the one failure here that a
-  // visitor would read as a broken site. Below-fold elements still wait for
-  // the observer, so the scroll effect is unchanged.
-  // Two rAFs: the first frame paints the hidden state, the second flips it, so
-  // the transition still runs instead of snapping.
-  requestAnimationFrame(() => {
+  // Two rAFs: the first frame paints the hidden state, the second flips it,
+  // so the entrance transitions instead of snapping.
+  requestAnimationFrame(() => requestAnimationFrame(revealInView));
+
+  // Scrolling is the backup that covers content below the fold if observer
+  // callbacks never arrive. Coalesced to one check per frame.
+  let queued = false;
+  const onScroll = () => {
+    if (queued) return;
+    queued = true;
     requestAnimationFrame(() => {
-      // innerHeight can read 0 in embedded/headless contexts; fall back rather
-      // than compare against a bogus zero and reveal nothing.
-      const viewportHeight =
-        window.innerHeight || document.documentElement.clientHeight || 0;
-      if (!viewportHeight) return;
-
-      revealables.forEach((el) => {
-        const box = el.getBoundingClientRect();
-        if (box.top < viewportHeight && box.bottom > 0) {
-          el.classList.add("is-visible");
-          observer.unobserve(el);
-        }
-      });
+      queued = false;
+      revealInView();
+      if (!pending.size) detachBackups();
     });
-  });
+  };
+
+  // Independent of both rAF and the observer — this is the path that still
+  // works when the others are throttled or broken.
+  const timer = setInterval(() => {
+    revealInView();
+    if (!pending.size) detachBackups();
+  }, 700);
+
+  function detachBackups() {
+    clearInterval(timer);
+    window.removeEventListener("scroll", onScroll);
+    window.removeEventListener("resize", onScroll);
+    document.removeEventListener("visibilitychange", onScroll);
+  }
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+  document.addEventListener("visibilitychange", onScroll);
 }
 
 /* ---------------------------------------------------------------
