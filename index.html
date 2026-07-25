@@ -79,6 +79,12 @@
         <span class="pitch-glow"></span>
       </div>
 
+      <!-- Decorative only. Stays empty unless main.js decides WebGL is worth
+           loading; the layout above is complete without it. -->
+      <div class="hero-stage" aria-hidden="true">
+        <canvas id="hero-canvas"></canvas>
+      </div>
+
       <div class="wrap hero-inner">
         <p class="eyebrow reveal">
           <span class="status-dot" aria-hidden="true"></span>

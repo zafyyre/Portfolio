@@ -190,6 +190,82 @@ if (sections.length && "IntersectionObserver" in window) {
 }
 
 /* ---------------------------------------------------------------
+   Card depth tilt
+   --------------------------------------------------------------- */
+
+// Pure CSS transforms — no library, no cost when unused.
+if (!prefersReducedMotion && window.matchMedia("(pointer: fine)").matches) {
+  const MAX_TILT = 5; // degrees; past ~6 it starts to feel gimmicky
+
+  document.querySelectorAll(".project, .skill-card").forEach((card) => {
+    card.addEventListener(
+      "pointermove",
+      (event) => {
+        const box = card.getBoundingClientRect();
+        const px = (event.clientX - box.left) / box.width - 0.5;
+        const py = (event.clientY - box.top) / box.height - 0.5;
+        card.style.setProperty("--tilt-x", `${(-py * MAX_TILT).toFixed(2)}deg`);
+        card.style.setProperty("--tilt-y", `${(px * MAX_TILT).toFixed(2)}deg`);
+      },
+      { passive: true }
+    );
+
+    card.addEventListener("pointerleave", () => {
+      card.style.setProperty("--tilt-x", "0deg");
+      card.style.setProperty("--tilt-y", "0deg");
+    });
+  });
+}
+
+/* ---------------------------------------------------------------
+   Hero 3D object (lazy, heavily guarded)
+   --------------------------------------------------------------- */
+
+function canRunWebGL() {
+  try {
+    const probe = document.createElement("canvas");
+    return Boolean(
+      window.WebGLRenderingContext &&
+        (probe.getContext("webgl2") || probe.getContext("webgl"))
+    );
+  } catch {
+    return false;
+  }
+}
+
+const heroCanvas = document.getElementById("hero-canvas");
+
+// Three.js is a large dependency, so it is fetched only when it will actually
+// be used: motion is welcome, the GPU can render it, and the visitor is not on
+// a metered/save-data connection. Otherwise the CSS backdrop stands on its own.
+if (
+  heroCanvas &&
+  !prefersReducedMotion &&
+  !navigator.connection?.saveData &&
+  canRunWebGL()
+) {
+  const load = () => {
+    import("./hero3d.js")
+      .then(({ createHeroScene }) => {
+        const scene = createHeroScene(heroCanvas);
+        if (scene) heroCanvas.classList.add("is-live");
+      })
+      .catch(() => {
+        // Chunk failed to load — the static hero is already on screen.
+      });
+  };
+
+  // Defer past first paint so the 3D never competes with content rendering.
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(load, { timeout: 2500 });
+  } else {
+    window.addEventListener("load", () => setTimeout(load, 400), {
+      once: true,
+    });
+  }
+}
+
+/* ---------------------------------------------------------------
    Footer year
    --------------------------------------------------------------- */
 
