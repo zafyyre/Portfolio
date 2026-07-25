@@ -1079,6 +1079,22 @@ svg {
     scroll-padding-top: 76px;
   }
 
+  /* Touch targets: fingers need ~44px. These are comfortable at 38px with a
+     mouse, but undersized once the pointer is coarse. */
+  .icon-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .wordmark {
+    padding-block: 0.5rem;
+  }
+
+  .project-links a {
+    min-height: 44px;
+    padding-block: 0.55rem;
+  }
+
   .nav-toggle {
     display: grid;
   }
@@ -1098,14 +1114,21 @@ svg {
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
+
+    /* visibility is stepped, never interpolated: it flips instantly when
+       opening and waits out the fade when closing. Transitioning it as a
+       duration makes the final state depend on the animation actually
+       running, which breaks under throttling (background tabs). */
     transition: opacity 0.25s var(--ease), transform 0.25s var(--ease),
-      visibility 0.25s var(--ease);
+      visibility 0s linear 0.25s;
   }
 
   .nav.is-open {
     opacity: 1;
     visibility: visible;
     transform: none;
+    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease),
+      visibility 0s linear 0s;
   }
 
   .nav a {
