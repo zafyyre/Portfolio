@@ -126,6 +126,31 @@ if (prefersReducedMotion || !("IntersectionObserver" in window)) {
     el.style.setProperty("--reveal-delay", `${(index % 4) * 70}ms`);
     observer.observe(el);
   });
+
+  // Anything already on screen is revealed from the first painted frame rather
+  // than waiting on an observer callback. Without this, a delayed or dropped
+  // delivery leaves the opening screen blank — the one failure here that a
+  // visitor would read as a broken site. Below-fold elements still wait for
+  // the observer, so the scroll effect is unchanged.
+  // Two rAFs: the first frame paints the hidden state, the second flips it, so
+  // the transition still runs instead of snapping.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      // innerHeight can read 0 in embedded/headless contexts; fall back rather
+      // than compare against a bogus zero and reveal nothing.
+      const viewportHeight =
+        window.innerHeight || document.documentElement.clientHeight || 0;
+      if (!viewportHeight) return;
+
+      revealables.forEach((el) => {
+        const box = el.getBoundingClientRect();
+        if (box.top < viewportHeight && box.bottom > 0) {
+          el.classList.add("is-visible");
+          observer.unobserve(el);
+        }
+      });
+    });
+  });
 }
 
 /* ---------------------------------------------------------------
