@@ -95,109 +95,14 @@ if (header) {
 }
 
 /* ---------------------------------------------------------------
-   Scroll reveal
+   Reduced motion
    --------------------------------------------------------------- */
 
-/*
- * Content starts hidden and JS reveals it, which buys the entrance animation
- * at the cost of one severe failure mode: if the reveal never runs, the page
- * is blank. That has now happened in production once, so the reveal does not
- * depend on any single mechanism.
- *
- * Primary: IntersectionObserver.
- * Backups, in order of independence: a rAF pass, passive scroll/resize, a
- * timer, and visibilitychange. Timers keep firing when rAF and observer
- * callbacks do not, so at least one path always lands.
- *
- * Every path funnels through revealInView(), which only reveals what is
- * actually on screen — so the backups guarantee visibility without flattening
- * the scroll animation for content further down.
- */
-
-const revealables = Array.from(document.querySelectorAll(".reveal"));
-const pending = new Set(revealables);
+// No scroll reveal in this design: content is never hidden, so there is no
+// state a failed script can strand it in. This flag now only gates the 3D.
 const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
 ).matches;
-
-let revealObserver = null;
-
-function markRevealed(el) {
-  el.classList.add("is-visible");
-  pending.delete(el);
-  revealObserver?.unobserve(el);
-}
-
-function revealAll() {
-  Array.from(pending).forEach(markRevealed);
-}
-
-function revealInView() {
-  if (!pending.size) return;
-  const viewportHeight =
-    window.innerHeight || document.documentElement.clientHeight || 0;
-  // A zero reading means the page has no usable layout yet; a later pass runs.
-  if (!viewportHeight) return;
-
-  Array.from(pending).forEach((el) => {
-    const box = el.getBoundingClientRect();
-    if (box.top < viewportHeight * 0.94 && box.bottom > 0) markRevealed(el);
-  });
-}
-
-if (prefersReducedMotion || !("IntersectionObserver" in window)) {
-  revealAll();
-} else {
-  revealObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) markRevealed(entry.target);
-      });
-    },
-    { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
-  );
-
-  revealables.forEach((el, index) => {
-    // Stagger siblings slightly so groups cascade instead of snapping in.
-    el.style.setProperty("--reveal-delay", `${(index % 4) * 70}ms`);
-    revealObserver.observe(el);
-  });
-
-  // Two rAFs: the first frame paints the hidden state, the second flips it,
-  // so the entrance transitions instead of snapping.
-  requestAnimationFrame(() => requestAnimationFrame(revealInView));
-
-  // Scrolling is the backup that covers content below the fold if observer
-  // callbacks never arrive. Coalesced to one check per frame.
-  let queued = false;
-  const onScroll = () => {
-    if (queued) return;
-    queued = true;
-    requestAnimationFrame(() => {
-      queued = false;
-      revealInView();
-      if (!pending.size) detachBackups();
-    });
-  };
-
-  // Independent of both rAF and the observer — this is the path that still
-  // works when the others are throttled or broken.
-  const timer = setInterval(() => {
-    revealInView();
-    if (!pending.size) detachBackups();
-  }, 700);
-
-  function detachBackups() {
-    clearInterval(timer);
-    window.removeEventListener("scroll", onScroll);
-    window.removeEventListener("resize", onScroll);
-    document.removeEventListener("visibilitychange", onScroll);
-  }
-
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", onScroll, { passive: true });
-  document.addEventListener("visibilitychange", onScroll);
-}
 
 /* ---------------------------------------------------------------
    Active section in nav
@@ -233,34 +138,6 @@ if (sections.length && "IntersectionObserver" in window) {
   );
 
   sections.forEach((section) => sectionObserver.observe(section));
-}
-
-/* ---------------------------------------------------------------
-   Card depth tilt
-   --------------------------------------------------------------- */
-
-// Pure CSS transforms — no library, no cost when unused.
-if (!prefersReducedMotion && window.matchMedia("(pointer: fine)").matches) {
-  const MAX_TILT = 5; // degrees; past ~6 it starts to feel gimmicky
-
-  document.querySelectorAll(".project, .skill-card").forEach((card) => {
-    card.addEventListener(
-      "pointermove",
-      (event) => {
-        const box = card.getBoundingClientRect();
-        const px = (event.clientX - box.left) / box.width - 0.5;
-        const py = (event.clientY - box.top) / box.height - 0.5;
-        card.style.setProperty("--tilt-x", `${(-py * MAX_TILT).toFixed(2)}deg`);
-        card.style.setProperty("--tilt-y", `${(px * MAX_TILT).toFixed(2)}deg`);
-      },
-      { passive: true }
-    );
-
-    card.addEventListener("pointerleave", () => {
-      card.style.setProperty("--tilt-x", "0deg");
-      card.style.setProperty("--tilt-y", "0deg");
-    });
-  });
 }
 
 /* ---------------------------------------------------------------

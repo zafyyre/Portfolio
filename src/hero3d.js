@@ -26,7 +26,6 @@ import {
   LineSegments,
   LineBasicMaterial,
   Color,
-  AdditiveBlending,
 } from "three";
 
 const CORE_RADIUS = 1.55;
@@ -104,33 +103,38 @@ export function createHeroScene(canvas) {
   scene.add(group);
 
   // --- wireframe core -----------------------------------------------------
+  // Detail 1 keeps the facet count low enough to read as a drawn diagram
+  // rather than a shaded ball.
   const coreGeometry = new IcosahedronGeometry(CORE_RADIUS, 1);
   const wireGeometry = new WireframeGeometry(coreGeometry);
   const wireMaterial = new LineBasicMaterial({
     transparent: true,
-    opacity: 0.55,
+    opacity: 0.42,
   });
   const core = new LineSegments(wireGeometry, wireMaterial);
   group.add(core);
 
   // --- particle shell -----------------------------------------------------
+  // No additive blending: the glow it produced was the single most generic
+  // thing on the page. Flat points at low opacity read as plotted vertices.
   const shellGeometry = buildShell(pointCount);
   const shellMaterial = new PointsMaterial({
-    size: isCompact ? 0.035 : 0.028,
+    size: isCompact ? 0.026 : 0.02,
     transparent: true,
-    opacity: 0.85,
+    opacity: 0.55,
     depthWrite: false,
-    blending: AdditiveBlending,
     sizeAttenuation: true,
   });
   const shell = new Points(shellGeometry, shellMaterial);
   group.add(shell);
 
   function applyThemeColors() {
-    const accent = cssColor("--accent", "#2ee08a");
-    const accent2 = cssColor("--accent-2", "#48c8ff");
+    const accent = cssColor("--accent", "#e0a44a");
+    const dim = cssColor("--dim", "#8b8982");
     wireMaterial.color.copy(accent);
-    shellMaterial.color.copy(accent.clone().lerp(accent2, 0.35));
+    // Vertices sit back in the neutral text colour so the amber reads as
+    // structure rather than decoration.
+    shellMaterial.color.copy(dim);
   }
   applyThemeColors();
 
@@ -182,14 +186,14 @@ export function createHeroScene(canvas) {
     pointerX += (targetX - pointerX) * Math.min(delta * 2.5, 1);
     pointerY += (targetY - pointerY) * Math.min(delta * 2.5, 1);
 
-    group.rotation.y += delta * 0.12;
-    group.rotation.x = Math.sin(t * 0.28) * 0.16 + pointerY * 0.18;
-    group.rotation.z = Math.sin(t * 0.19) * 0.06;
-    group.position.x = pointerX * 0.32;
+    // Slower than before and on one axis: a turntable, not a floating orb.
+    group.rotation.y += delta * 0.07;
+    group.rotation.x = Math.sin(t * 0.18) * 0.1 + pointerY * 0.12;
+    group.position.x = pointerX * 0.22;
 
     // Slow breathing so the silhouette never sits perfectly still. The core
     // scales opposite the shell, so the gap between them opens and closes.
-    const breathe = Math.sin(t * 0.6) * 0.035;
+    const breathe = Math.sin(t * 0.45) * 0.025;
     shell.scale.setScalar(1 + breathe);
     core.scale.setScalar(1 - breathe);
 
