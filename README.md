@@ -2,9 +2,10 @@
 
 Personal portfolio for **Zaafir Ali** — [zaafsworld.netlify.app](https://zaafsworld.netlify.app)
 
-A static site in a monospace, spec-sheet style: semantic HTML, hand-written
-CSS, and a small layer of vanilla JavaScript. Vite bundles, Netlify hosts.
-three.js drives one ambient hero object and is the only dependency.
+A static site in a monospace, spec-sheet style, built with Claude Code:
+semantic HTML, CSS, and a small layer of vanilla JavaScript. Vite bundles,
+Netlify hosts. three.js drives one ambient hero object and is the only
+dependency.
 
 ## Stack
 

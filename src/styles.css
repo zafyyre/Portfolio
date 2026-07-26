@@ -425,11 +425,6 @@ canvas {
   color: var(--accent);
 }
 
-.entry-dim .entry-title,
-.entry-dim .entry-note {
-  color: var(--dim);
-}
-
 /* ---------- note lists ---------- */
 
 .notes {
