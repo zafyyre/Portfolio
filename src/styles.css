@@ -419,12 +419,6 @@ canvas {
   border-bottom-color: var(--accent);
 }
 
-/* The one engineering role — marked, not decorated. */
-.entry-mark .entry-title::after {
-  content: " ◂";
-  color: var(--accent);
-}
-
 /* ---------- note lists ---------- */
 
 .notes {
