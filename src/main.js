@@ -99,10 +99,35 @@ if (header) {
    --------------------------------------------------------------- */
 
 // No scroll reveal in this design: content is never hidden, so there is no
-// state a failed script can strand it in. This flag now only gates the 3D.
+// state a failed script can strand it in. This flag gates the 3D and the
+// section-rule animation.
 const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
 ).matches;
+
+/* ---------------------------------------------------------------
+   Section rules
+   --------------------------------------------------------------- */
+
+// Replays the hairline beside each section heading as it comes into view.
+// This animates a ::after pseudo-element whose default state is already the
+// finished line, so nothing is hidden waiting on this to run — if the
+// observer never fires, every rule is simply drawn. Deliberately unlike the
+// old scroll reveal, which could strand the page blank.
+if (!prefersReducedMotion && "IntersectionObserver" in window) {
+  const labels = document.querySelectorAll(".section-label");
+  const ruleObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-shown");
+        ruleObserver.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.6 }
+  );
+  labels.forEach((el) => ruleObserver.observe(el));
+}
 
 /* ---------------------------------------------------------------
    Active section in nav

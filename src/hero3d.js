@@ -24,6 +24,7 @@ import {
   IcosahedronGeometry,
   WireframeGeometry,
   LineSegments,
+  LineLoop,
   LineBasicMaterial,
   Color,
 } from "three";
@@ -64,6 +65,20 @@ function buildShell(count) {
     positions[i * 3 + 2] = Math.sin(theta) * ring * r;
   }
 
+  const geometry = new BufferGeometry();
+  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  return geometry;
+}
+
+/** A flat circle of line segments, used as an orbital ring. */
+function buildRing(radius, segments = 128) {
+  const positions = new Float32Array(segments * 3);
+  for (let i = 0; i < segments; i++) {
+    const angle = (i / segments) * Math.PI * 2;
+    positions[i * 3] = Math.cos(angle) * radius;
+    positions[i * 3 + 1] = 0;
+    positions[i * 3 + 2] = Math.sin(angle) * radius;
+  }
   const geometry = new BufferGeometry();
   geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
   return geometry;
@@ -128,6 +143,26 @@ export function createHeroScene(canvas) {
   const shell = new Points(shellGeometry, shellMaterial);
   group.add(shell);
 
+  // --- orbital rings ------------------------------------------------------
+  // Two tilted rings turning against each other. Reads as a gyroscope or an
+  // orbit diagram rather than decoration, which is the point.
+  const ringOuterGeometry = buildRing(SHELL_RADIUS * 1.16);
+  const ringInnerGeometry = buildRing(SHELL_RADIUS * 0.82);
+  const ringMaterial = new LineBasicMaterial({
+    transparent: true,
+    opacity: 0.5,
+  });
+
+  const ringOuter = new LineLoop(ringOuterGeometry, ringMaterial);
+  ringOuter.rotation.x = 1.16;
+  ringOuter.rotation.z = 0.28;
+  group.add(ringOuter);
+
+  const ringInner = new LineLoop(ringInnerGeometry, ringMaterial);
+  ringInner.rotation.x = 0.42;
+  ringInner.rotation.z = -0.55;
+  group.add(ringInner);
+
   function applyThemeColors() {
     const accent = cssColor("--accent", "#e0a44a");
     const dim = cssColor("--dim", "#8b8982");
@@ -135,6 +170,7 @@ export function createHeroScene(canvas) {
     // Vertices sit back in the neutral text colour so the amber reads as
     // structure rather than decoration.
     shellMaterial.color.copy(dim);
+    ringMaterial.color.copy(accent);
   }
   applyThemeColors();
 
@@ -170,10 +206,20 @@ export function createHeroScene(canvas) {
     window.addEventListener("pointermove", onPointerMove, { passive: true });
   }
 
+  // --- scroll link --------------------------------------------------------
+  // Cached in a listener rather than read inside the render loop: touching
+  // scrollY every frame forces a layout read.
+  let scrollY = window.scrollY || 0;
+  const onScroll = () => {
+    scrollY = window.scrollY || 0;
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+
   // --- render loop --------------------------------------------------------
   let frame = 0;
   let running = false;
   let lastTime = 0;
+  let spin = 0;
 
   function tick(now) {
     if (!running) return;
@@ -187,9 +233,16 @@ export function createHeroScene(canvas) {
     pointerY += (targetY - pointerY) * Math.min(delta * 2.5, 1);
 
     // Slower than before and on one axis: a turntable, not a floating orb.
-    group.rotation.y += delta * 0.07;
+    // Scroll adds to the spin, so the object tracks page position instead of
+    // drifting independently of it.
+    spin += delta * 0.07;
+    group.rotation.y = spin + scrollY * 0.0016;
     group.rotation.x = Math.sin(t * 0.18) * 0.1 + pointerY * 0.12;
     group.position.x = pointerX * 0.22;
+
+    // Rings turn against the body and against each other.
+    ringOuter.rotation.z = 0.28 + t * 0.09;
+    ringInner.rotation.z = -0.55 - t * 0.14;
 
     // Slow breathing so the silhouette never sits perfectly still. The core
     // scales opposite the shell, so the gap between them opens and closes.
@@ -253,6 +306,10 @@ export function createHeroScene(canvas) {
       themeWatcher.disconnect();
       document.removeEventListener("visibilitychange", onVisibilityChange);
       if (finePointer) window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("scroll", onScroll);
+      ringOuterGeometry.dispose();
+      ringInnerGeometry.dispose();
+      ringMaterial.dispose();
       shellGeometry.dispose();
       shellMaterial.dispose();
       coreGeometry.dispose();
